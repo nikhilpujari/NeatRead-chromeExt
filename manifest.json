@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "ClearPage - AI Summary with AdBlocker",
+    "version": "1.0",
+    "description": "Summarizes the content of the current webpage and removes ad from the page.",
+    "permissions": ["scripting", "activeTab", "storage"],
+    "host_permissions": ["https://*/*", "http://*/*"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://*/*", "http://*/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  
