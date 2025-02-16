@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "ClearPage - AI Summary with AdBlocker",
+    "name": "NeatRead - AI Summary with AdBlocker",
     "version": "1.0",
     "description": "Summarizes the content of the current webpage and removes ad from the page.",
     "permissions": ["scripting", "activeTab", "storage"],
