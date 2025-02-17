@@ -14,7 +14,7 @@ document.getElementById("summarize").addEventListener("click", async () => {
         console.log("Response received from content script:", response);
         
         if (response && response.text) {
-            const apiKey = await getAPIKey();  // Retrieve API key
+            const apiKey = await getAPIKey("OPENAI_API_KEY");  // Retrieve OpenAI API key
             console.log("OpenAI API Key retrieved:", apiKey ? "Yes" : "No");
 
             if (!apiKey) {
@@ -41,16 +41,16 @@ document.getElementById("summarize").addEventListener("click", async () => {
     });
 });
 
-// Function to retrieve API Key
-async function getAPIKey() {
+// ✅ Function to retrieve API Key from Chrome Storage
+async function getAPIKey(keyName) {
     return new Promise((resolve) => {
-        chrome.storage.local.get("OPENAI_API_KEY", (result) => {
-            resolve(result.OPENAI_API_KEY || "");
+        chrome.storage.local.get(keyName, (result) => {
+            resolve(result[keyName] || "");
         });
     });
 }
 
-// Function to call OpenAI API for summarization
+// ✅ Function to call OpenAI API for summarization
 async function getSummaryFromOpenAI(text, apiKey) {
     const url = "https://api.openai.com/v1/chat/completions";
 
@@ -63,7 +63,7 @@ async function getSummaryFromOpenAI(text, apiKey) {
             },
             body: JSON.stringify({
                 model: "gpt-4",
-                messages: [{ role: "user", content: `Summarize this in bullet points: ${text}` }],
+                messages: [{ role: "user", content: `Give a short Title and (in the next line) Summarize this in bullet points: ${text}` }],
                 max_tokens: 150
             })
         });
@@ -78,7 +78,7 @@ async function getSummaryFromOpenAI(text, apiKey) {
     }
 }
 
-// ✅ Function to Translate Text using MyMemory API (Always from Original English Summary)
+// ✅ Function to Translate Text using Google Translate API with Environment Variable
 document.getElementById("translate").addEventListener("click", async () => {
     if (!originalSummary) {
         alert("Please generate a summary first!");
@@ -98,42 +98,43 @@ document.getElementById("translate").addEventListener("click", async () => {
     console.log("Translating from saved English summary:", originalSummary);
 
     try {
-        console.log("Splitting text into chunks...");
-        const chunks = splitTextIntoChunks(originalSummary, 500); // Split text into 500-char chunks
-        let translatedChunks = [];
+        console.log("Fetching Google Translate API Key...");
+        const apiKey = await getAPIKey("GOOGLE_TRANSLATE_API_KEY");  // Retrieve Google Translate API Key
 
-        for (let chunk of chunks) {
-            console.log("Sending request to MyMemory API for chunk:", chunk);
-
-            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=en|${selectedLanguage}`);
-            const data = await response.json();
-
-            console.log("MyMemory API Response:", data);
-
-            if (data.responseData && data.responseData.translatedText) {
-                translatedChunks.push(data.responseData.translatedText);
-            } else {
-                console.error("Error: No translated text returned for chunk:", chunk);
-                translatedChunks.push("[Translation failed for this part]");
-            }
+        if (!apiKey) {
+            console.error("Google Translate API Key not found.");
+            document.getElementById("summary").innerText = "Translation failed: API key missing.";
+            return;
         }
 
-        // Combine translated chunks into final text
-        const finalTranslatedText = translatedChunks.join(" ");
-        document.getElementById("summary").innerText = finalTranslatedText;  // Replace summary with translated text
-        console.log("Final translated text:", finalTranslatedText);
+        console.log("Sending request to Google Translate API...");
+
+        const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                q: originalSummary,
+                target: selectedLanguage,
+                source: "en",
+                format: "text"
+            })
+        });
+
+        const data = await response.json();
+        console.log("Google Translate API Response:", data);
+
+        if (data.data && data.data.translations.length > 0) {
+            document.getElementById("summary").innerText = data.data.translations[0].translatedText;
+        } else {
+            document.getElementById("summary").innerText = "Translation failed.";
+        }
 
     } catch (error) {
         document.getElementById("summary").innerText = "Error: Unable to translate.";
-        console.error("Error fetching translation from MyMemory API:", error);
+        console.error("Error fetching translation from Google Translate API:", error);
     }
 });
-
-// ✅ Function to split long text into 500-character chunks
-function splitTextIntoChunks(text, maxLength) {
-    let chunks = [];
-    for (let i = 0; i < text.length; i += maxLength) {
-        chunks.push(text.substring(i, i + maxLength));
-    }
-    return chunks;
-}

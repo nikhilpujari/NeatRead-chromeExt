@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>NeatRead - AI Summary with AdBlocker</title>
+    <title>NeatRead - AI Summary with Translater</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h2>NeatRead - <small>Summary with AdBlocker</small></h2>
+    <h2>NeatRead - <small>Summary with Translater</small></h2>
     <button id="summarize">Summarize</button>
 
     <div id="loading" class="hidden">
@@ -13,16 +13,20 @@
     </div>
 
     <p id="summary">Click "Summarize" to generate a summary.</p>
-    <label for="language">Translate to:</label>
-    <select id="language">
-        <option value="en">English</option>
-        <option value="es">Spanish</option>
-        <option value="fr">French</option>
-        <option value="de">German</option>
-        <option value="hi">Hindi</option>
-        <option value="zh">Chinese</option>
-    </select>
-    <button id="translate">Translate</button>
+
+    <div class="translate-container">
+        <label for="language" class="translate-label">Translate to:</label>
+        <select id="language">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="hi">Hindi</option>
+            <option value="zh">Chinese</option>
+        </select>
+        <button id="translate">Translate</button>
+    </div>
+
     <p id="translatedSummary"></p>
 
     <script src="popup.js"></script>

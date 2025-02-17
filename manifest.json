@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "NeatRead - AI Summary with AdBlocker",
+    "name": "NeatRead - AI Summary with translator",
     "version": "1.0",
-    "description": "Summarizes the content of the current webpage and removes ad from the page.",
+    "description": "Summarizes the content of the current webpage and gives ability to translate it.",
     "permissions": ["scripting", "activeTab", "storage"],
     "host_permissions": ["https://*/*", "http://*/*"],
     "background": {

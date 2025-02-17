@@ -30,3 +30,60 @@ p {
     text-align: center;
     margin-top: 10px;
 }
+
+body {
+    width: 300px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+}
+
+button {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+p {
+    font-size: 14px;
+}
+
+.hidden {
+    display: none;
+}
+
+#loading {
+    text-align: center;
+    margin-top: 10px;
+}
+
+select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+button#translate {
+    padding: 6px 5px;
+    margin-bottom: 0;
+}
+
+.translate-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+
+.translate-label {
+    flex-shrink: 0;
+}
